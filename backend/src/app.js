@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import authRoutes from "./routes/auth.routes.js";
+import transactionRoutes from "./routes/transaction.routes.js";
 
 const app = express();
 
@@ -16,6 +18,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 
+
 //cors configuration
 app.use(
     cors(
@@ -26,10 +29,14 @@ app.use(
     )
 );
 
+app.use("/api/auth", authRoutes);
+app.use("/api/transactions", transactionRoutes);
+
 
 app.get("/health" , (req,res) => {
     res.status(200).json({message : "Server is healthy"});
 });
+
 
 
 export default app;
