@@ -4,6 +4,9 @@ import helmet from "helmet";
 import morgan from "morgan";
 import authRoutes from "./routes/auth.routes.js";
 import transactionRoutes from "./routes/transaction.routes.js";
+import analyticsRoutes from "./routes/analytics.routes.js";
+import budgetRoutes from "./routes/budget.routes.js";
+import aiRoutes from "./routes/ai.routes.js";
 
 const app = express();
 
@@ -31,6 +34,9 @@ app.use(
 
 app.use("/api/auth", authRoutes);
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/budgets", budgetRoutes);
+app.use("/api/ai", aiRoutes);
 
 
 app.get("/health" , (req,res) => {

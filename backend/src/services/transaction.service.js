@@ -10,6 +10,7 @@ export const createTransactionService = async (
     type,
     merchant,
     description,
+    date
   } = data;
 
   if (!amount || !category || !type) {
@@ -28,6 +29,7 @@ export const createTransactionService = async (
       merchant,
       description,
       userId,
+      date
     },
   });
 
