@@ -66,7 +66,7 @@ export const generateAIInsightsService =
         : "No timeline data available.";
 
     const prompt = `
-You are an intelligent fintech financial advisor AI.
+You are MonAI, an intelligent fintech financial advisor.
 
 Analyze the following financial analytics data and generate:
 
@@ -80,6 +80,7 @@ Keep the response:
 - practical
 - personalized
 - easy to understand
+- formatted with short lines and bullet points when useful
 
 Avoid generic advice.
 
@@ -157,7 +158,7 @@ export const financeChatService =
       );
 
     const prompt = `
-You are an AI-powered fintech assistant.
+You are MonAI, an AI-powered fintech assistant.
 
 Answer the user's financial question using ONLY the provided financial analytics data.
 
@@ -210,6 +211,7 @@ ${userMessage}
 Instructions:
 - Give concise financial answers
 - Be practical and data-driven
+- Format the answer with short paragraphs or bullet points when useful
 - Avoid hallucinating fake financial data
 - Use the provided analytics only
 - Sound like a smart fintech advisor
@@ -223,3 +225,98 @@ Instructions:
 
     return response;
   };
+
+const extractJsonObject = (text) => {
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+
+  if (!jsonMatch) {
+    throw new Error("Could not read receipt details");
+  }
+
+  return JSON.parse(jsonMatch[0]);
+};
+
+export const extractReceiptService = async ({
+  imageBase64,
+  mimeType,
+}) => {
+  if (!imageBase64 || !mimeType) {
+    throw new Error("Receipt image is required");
+  }
+
+  const prompt = `
+You are extracting transaction fields from a receipt or payment screenshot.
+
+Return ONLY valid JSON. Do not wrap it in markdown.
+
+Schema:
+{
+  "amount": number | null,
+  "category": string | null,
+  "date": "YYYY-MM-DD" | null,
+  "description": string | null,
+  "merchant": string | null,
+  "type": "expense" | "income" | null,
+  "confidence": {
+    "amount": "high" | "medium" | "low" | "none",
+    "category": "high" | "medium" | "low" | "none",
+    "date": "high" | "medium" | "low" | "none",
+    "merchant": "high" | "medium" | "low" | "none"
+  },
+  "missingFields": string[]
+}
+
+Rules:
+- Do not infer today's date, upload date, or current date.
+- If a field is not visible or not clearly supported by the image, return null.
+- Prefer the final paid/grand total for amount. Ignore phone numbers, GSTIN, invoice numbers, table numbers, item quantities, and card digits.
+- Use expense for purchases, bills, UPI payments, card payments, and receipts.
+- Use income only if the image clearly indicates money received/refund/credit.
+- Category should be short, like Food, Travel, Shopping, Groceries, Utilities, Healthcare, Entertainment, Salary, Refund, or Other.
+- Description should be a short human-readable summary using only visible details.
+`;
+
+  const result = await model.generateContent([
+    prompt,
+    {
+      inlineData: {
+        data: imageBase64,
+        mimeType,
+      },
+    },
+  ]);
+
+  const response = result.response.text();
+  const parsed = extractJsonObject(response);
+
+  return {
+    amount:
+      typeof parsed.amount === "number"
+        ? parsed.amount
+        : null,
+    category:
+      typeof parsed.category === "string"
+        ? parsed.category
+        : null,
+    confidence: parsed.confidence || {},
+    date:
+      typeof parsed.date === "string"
+        ? parsed.date
+        : null,
+    description:
+      typeof parsed.description === "string"
+        ? parsed.description
+        : null,
+    merchant:
+      typeof parsed.merchant === "string"
+        ? parsed.merchant
+        : null,
+    missingFields: Array.isArray(parsed.missingFields)
+      ? parsed.missingFields
+      : [],
+    type:
+      parsed.type === "income" || parsed.type === "expense"
+        ? parsed.type
+        : null,
+  };
+};

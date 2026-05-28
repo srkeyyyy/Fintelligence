@@ -1,0 +1,25 @@
+import api from "./api";
+
+export const getTransactions = async () => {
+  const { data } = await api.get("/transactions");
+  return data;
+};
+
+export const createTransaction = async (payload) => {
+  const { data } = await api.post("/transactions", {
+    ...payload,
+    amount: Number(payload.amount),
+    date: new Date(payload.date).toISOString(),
+  });
+  return data;
+};
+
+export const updateTransaction = async (id, payload) => {
+  const { data } = await api.patch(`/transactions/${id}`, payload);
+  return data;
+};
+
+export const deleteTransaction = async (id) => {
+  const { data } = await api.delete(`/transactions/${id}`);
+  return data;
+};
