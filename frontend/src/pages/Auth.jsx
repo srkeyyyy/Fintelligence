@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { motion } from "framer-motion";
-import { ArrowLeft, CircleDollarSign, CreditCard, Landmark } from "lucide-react";
+import { CircleDollarSign, CreditCard, Landmark } from "lucide-react";
 
 import LoginForm from "../components/auth/LoginForm";
 import SignupForm from "../components/auth/SignupForm";
@@ -31,10 +31,6 @@ function Auth() {
     <main className="grid min-h-screen place-items-center bg-[#0f172a] px-5 py-8 text-white">
       <Toaster position="top-center" />
       <div className="w-full max-w-5xl">
-        <Link to="/" className="mb-6 inline-flex items-center gap-2 text-sm text-slate-300 hover:text-white">
-          <ArrowLeft size={16} />
-          Back To Intro
-        </Link>
 
         <div className="grid overflow-hidden rounded-lg border border-white/10 bg-[#172033] shadow-2xl md:grid-cols-[0.85fr_1.15fr]">
           <section className="relative hidden min-h-[620px] overflow-hidden bg-[#1e293b] p-8 md:grid md:place-items-center">
