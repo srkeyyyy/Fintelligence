@@ -9,19 +9,23 @@ import {
   updateTransaction,
   deleteTransaction,
 } from "../controllers/transaction.controller.js";
+import {
+  cacheResponse,
+  invalidateUserCacheOnSuccess,
+} from "../middleware/cache.middleware.js";
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
-router.post("/", createTransaction);
+router.post("/", invalidateUserCacheOnSuccess(), createTransaction);
 
-router.get("/", getTransactions);
+router.get("/", cacheResponse(120), getTransactions);
 
 router.get("/:id", getTransactionById);
 
-router.patch("/:id", updateTransaction);
+router.patch("/:id", invalidateUserCacheOnSuccess(), updateTransaction);
 
-router.delete("/:id", deleteTransaction);
+router.delete("/:id", invalidateUserCacheOnSuccess(), deleteTransaction);
 
 export default router;

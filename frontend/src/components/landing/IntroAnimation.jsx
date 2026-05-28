@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { ArrowRight, Banknote, Coins, CreditCard, LogIn, Sparkles, UserPlus, WalletCards } from "lucide-react";
 
 const floatItems = [
-  { icon: Banknote, label: "Save", x: "-30vw", y: "-18vh", delay: 0.2, color: "text-teal-300" },
-  { icon: Coins, label: "Plan", x: "28vw", y: "-12vh", delay: 0.35, color: "text-yellow-300" },
-  { icon: CreditCard, label: "Track", x: "-24vw", y: "18vh", delay: 0.5, color: "text-sky-300" },
-  { icon: WalletCards, label: "Grow", x: "24vw", y: "18vh", delay: 0.65, color: "text-teal-200" },
+  { icon: Banknote, label: "Save", x: "-33vw", y: "-18vh", delay: 0.2, color: "text-teal-300" },
+  { icon: Coins, label: "Plan", x: "31vw", y: "-14vh", delay: 0.35, color: "text-yellow-300" },
+  { icon: CreditCard, label: "Track", x: "-28vw", y: "20vh", delay: 0.5, color: "text-sky-300" },
+  { icon: WalletCards, label: "Grow", x: "27vw", y: "20vh", delay: 0.65, color: "text-teal-200" },
 ];
 
 function IntroAnimation() {
@@ -21,8 +21,11 @@ function IntroAnimation() {
 
       <motion.svg
         aria-hidden="true"
-        className="absolute h-[62vmin] max-h-[620px] min-h-[360px] w-[62vmin] max-w-[620px] min-w-[360px]"
+        animate={{ opacity: 0.42 }}
+        className="absolute h-[58vmin] max-h-[560px] min-h-[340px] w-[58vmin] max-w-[560px] min-w-[340px]"
         fill="none"
+        initial={{ opacity: 0 }}
+        transition={{ duration: 1.8, delay: 1.8 }}
         viewBox="0 0 600 600"
       >
         <motion.circle
@@ -57,12 +60,12 @@ function IntroAnimation() {
 
       {floatItems.map(({ icon: Icon, label, x, y, delay, color }) => (
         <motion.div
-          animate={{ opacity: 1, x, y }}
-          className="absolute hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.07] px-4 py-2 text-sm text-slate-100 shadow-2xl backdrop-blur md:flex"
+          animate={{ opacity: [0, 1, 0.32], x, y }}
+          className="absolute hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.055] px-4 py-2 text-sm text-slate-100 shadow-xl backdrop-blur md:flex"
           initial={{ opacity: 0, x: 0, y: 0, scale: 0.76 }}
           key={label}
-          transition={{ delay, duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-          whileHover={{ scale: 1.06, y: `calc(${y} - 4px)` }}
+          transition={{ delay, duration: 2.4, times: [0, 0.45, 1], ease: [0.22, 1, 0.36, 1] }}
+          whileHover={{ opacity: 1, scale: 1.04 }}
         >
           <Icon className={color} size={18} />
           {label}
@@ -102,7 +105,7 @@ function IntroAnimation() {
         </motion.p>
 
         <motion.h1
-          className="text-6xl font-bold leading-tight tracking-normal text-white md:text-8xl"
+          className="text-7xl font-bold leading-tight tracking-normal text-white md:text-9xl"
           variants={{
             hidden: { opacity: 0, y: 20, filter: "blur(12px)" },
             show: { opacity: 1, y: 0, filter: "blur(0px)" },
@@ -113,7 +116,7 @@ function IntroAnimation() {
         </motion.h1>
 
         <motion.p
-          className="mx-auto mt-5 max-w-2xl text-lg font-medium leading-8 text-slate-300"
+          className="mx-auto mt-5 max-w-2xl text-xl font-semibold leading-8 text-slate-300"
           variants={{
             hidden: { opacity: 0, y: 16 },
             show: { opacity: 1, y: 0 },
